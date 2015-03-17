@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Client Side Apps - Applied JS Berlin</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+
+  <body>
+
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Building Client Side Apps</h1>
+          <h3>Applied JS Berlin</h3>
+          <h4>2015-03-18</h4>
+          <p>
+            <small>By Marc Greenstock / <a href="http://twitter.com/marcgreenstock">@marcgreenstock</a></small>
+          </p>
+        </section>
+
+        <section>
+          <h2>The build process</h2>
+          <p class="fragment">How do we build a client-side JavasSript app without a backend?</p>
+        </section>
+
+        <section>
+          <h2>Say hello to Gulp</h2>
+					<img src="lib/img/gulp.png" style="background: transparent; border: none; box-shadow: none;">
+        </section>
+
+        <section>
+          <h2>A Simple task</h2>
+          <pre>
+            <code style="word-wrap: break-word;">
+var gulp = require('gulp');
+
+gulp.task('copy', function() {
+  gulp
+    .src('./src/**/*')
+    .pipe(gulp.dest('./_build'));
+});
+            </code>
+          </pre>
+        </section>
+
+        <section>
+          <h2>Building styles</h2>
+          <pre>
+            <code>
+var less = require('gulp-less');
+
+gulp.task('styles', function() {
+  gulp
+    .src('./src/assets/styles/app.less')
+    .pipe(less())
+    .pipe(gulp.dest('./_build/assets'));
+});
+            </code>
+          </pre>
+        </section>
+
+        <section>
+					<h2>Building JavaScript</h2>
+					<img class="fragment" src="lib/img/browserify.png" style="background: transparent; border: none; box-shadow: none;">
+				</section>
+
+				<section>
+					<h2>The tool belt</h2>
+        	<pre>
+          	<code>
+var browserify = require('browserify');
+var reactify = require('coffee-reactify');
+var envify = require('envify/custom');
+var coffeeify = require('coffeeify');
+var source = require('vinyl-source-stream');
+						</code>
+					</pre>
+				</section>
+
+				<section>
+					<h2>The gulp task</h2>
+					<pre>
+          	<code>
+gulp.task('scripts', function() {
+  var options = {
+    entries: './src/assets/scripts/app.coffee',
+    extensions: ['.cjsx', '.coffee', '.litcoffee'],
+    debug: true
+  };
+  browserify(options)
+    .transform(reactify, {
+      coffeeout: true
+    })
+    .transform(coffeeify)
+    .transform(envify, {
+      apiUrl: 'https://api.example.com',
+      lastModified: (new Date).toUTCString()
+    })
+    .bundle()
+    .pipe(source('app.js'))
+    .pipe(gulp.dest('./_build/assets');
+});
+            </code>
+          </pre>
+        </section>
+
+				<section>
+					<h2>Publishing</h2>
+					<h5 class="fragment" style="text-transform: initial;">credentials.json</h5>
+					<pre class="fragment">
+						<code>
+{
+  "production": {
+    "aws": {
+      "key": "[aws iam key]",
+      "secret": "[aws iam secret]",
+      "bucket": "[s3 bucket name]",
+      "distributionId": "[cloudfront distribution id]"
+    }
+  }
+}
+						</code>
+					</pre>
+				</section>
+
+				<section>
+					<h2>The tool belt</h2>
+					<pre>
+						<code>
+var revall = require('gulp-rev-all');
+var awspublish = require('gulp-awspublish');
+var cloudfront = require('gulp-cloudfront');
+						</code>
+					</pre>
+				</section>
+
+				<section>
+					<h2>The gulp task</h2>
+					<pre>
+						<code>
+gulp.task('publish', ['styles', 'scripts'], function() {
+  var aws = require('./credentials').production.aws;
+  var headers = {
+    'Cache-Control': 'max-age=315360000, no-transform, public'
+  };
+  var publisher = awspublish.create(aws);
+
+  gulp.src('./_build/**')
+    .pipe(revall())
+    .pipe(awspublish.gzip())
+    .pipe(publisher.publish(headers))
+    .pipe(publisher.cache())
+    .pipe(awspublish.reporter())
+    .pipe(cloudfront(aws))
+});
+						</code>
+					</pre>
+				</section>
+
+				<section>
+					<h2>What is a fingerprint?</h2>
+					<p class="fragment"><code>app.js</code></p>
+					<h5 class="fragment">becomes</h5>
+					<p class="fragment"><code>app.05b2a126.js</code></p>
+				</section>
+
+				<section>
+					<h2>Referencing fingerprints</h2>
+					<pre>
+						<code>
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;script src="/assets/app.js"&gt;&lt;script&gt;
+    &lt;link rel="stylesheet" href="/assets/app.css"&gt;
+  &lt;/head&gt;
+&lt;/html&gt;
+						</code>
+					</pre>
+				</section>
+
+				<section>
+					<h2>Referencing fingerprints</h2>
+					<pre>
+						<code>
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;script src="/assets/app.05b2a126.js"&gt;&lt;script&gt;
+    &lt;link rel="stylesheet" href="/assets/app.16f2b973.css"&gt;
+  &lt;/head&gt;
+&lt;/html&gt;
+						</code>
+					</pre>
+				</section>
+
+				<section>
+					<h2>Invalidating the cache</h2>
+					<h3 class="fragment">That's for suckers</h3>
+					<p class="fragment">gulp-cloudfront changes the root object instead.</p>
+				</section>
+
+				<section>
+					<h2>Development</h2>
+				</section>
+
+				<section>
+					<h2>Watching for changes</h2>
+					<pre>
+						<code>
+var watch = require('gulp-watch');
+
+gulp.task('watch', function(callback) {
+  watch './src/assets/scripts/**/*', function() {
+    gulp.start('scripts');
+  });
+  watch './src/assets/styles/**/*', function() {
+    gulp.start('styles');
+  });
+  callback();
+});
+						</code>
+					</pre>
+				</section>
+
+				<section>
+					<h2>Local hosting</h2>
+					<pre>
+						<code>
+var webserver = require('gulp-webserver');
+
+gulp.task('serve', function() {
+  gulp.src('./_build')
+    .pipe(webserver({
+      livereload: false,
+      open: false
+    });
+});
+						</code>
+					</pre>
+				</section>
+
+				<section>
+					<h1>Demo</h1>
+				</section>
+
+				<section>
+					<h1>Thank you</h1>
+					<h2>Questions?</h2>
+				</section>
+
+				<section>
+					<h2>Resources</h2>
+					<ul>
+						<li>gulpjs.com</li>
+						<li>browserify.org</li>
+						<li>npmjs.com/package/gulp-less</li>
+						<li>npmjs.com/package/envify</li>
+						<li>npmjs.com/package/gulp-awspublish</li>
+						<li>npmjs.com/package/gulp-rev-all</li>
+						<li>npmjs.com/package/gulp-cloudfront</li>
+						<li>npmjs.com/package/gulp-webserver</li>
+						<li>npmjs.com/package/gulp-watch</li>
+					</ul>
+				</section>
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true },
+          { src: 'plugin/notes/notes.js', async: true }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
