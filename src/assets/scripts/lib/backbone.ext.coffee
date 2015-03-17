@@ -1,18 +1,11 @@
 _          = require 'underscore'
 Backbone   = require 'backbone'
-translate  = require './translate'
-moment     = require 'moment'
-accounting = require 'accounting'
-
-_.extend Backbone.View::,
-  renderer: (options={}) ->
-    throw new Error 'template is undefined' unless @template
-    @template _.extend {}, options,
-      a      : accounting
-      t      : translate
-      moment : moment
 
 class Backbone.ParentView extends Backbone.View
+  renderer: (options={}) ->
+    throw new Error 'template is undefined' unless @template
+    @template options
+
   remove: ->
     console.log "-- removing view #{@cid}"
     @removeChildren()

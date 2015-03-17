@@ -1,0 +1,22 @@
+.page-header
+  %h1 Contact
+%form.form-horizontal
+  .form-group
+    %label.control-label.col-sm-2.col-sm-offset-2{for: 'contact_email'}
+      Email
+    .col-sm-4
+      %input.form-control.input-lg#contact_email{type: 'email', name: 'email'}
+  .form-group
+    %label.control-label.col-sm-2.col-sm-offset-2{for: 'contact_name'}
+      Name
+    .col-sm-4
+      %input.form-control.input-lg#contact_name{type: 'text', name: 'name'}
+  .form-group
+    %label.control-label.col-sm-2.col-sm-offset-2{for: 'contact_message'}
+      Message
+    .col-sm-4
+      %textarea.form-control.input-lg#contact_message{rows: 8, name: 'message'}
+  .form-group
+    .col-sm-4.col-sm-offset-4
+      %button.btn.btn-default.btn-block.btn-lg{type: 'submit'}
+        Send

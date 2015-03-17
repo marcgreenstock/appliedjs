@@ -18,7 +18,7 @@ source      = require 'vinyl-source-stream'
 runSequence = require 'run-sequence'
 del         = require 'del'
 coffeeify   = require 'coffeeify'
-reactify    = require 'coffee-reactify'
+hamlify     = require 'haml-coffee-browserify'
 envify      = require 'envify/custom'
 awspublish  = require 'gulp-awspublish'
 cloudfront  = require 'gulp-cloudfront'
@@ -77,32 +77,21 @@ gulp.task 'serve', ->
     .pipe webserver
       livereload : false
       open       : false
+      port       : 8001
 
 gulp.task 'clean', (cb) ->
   del ['./_build/**/*'], cb
 
 gulp.task 'scripts', ->
   debug = options.environment is 'development'
-  switch options.environment
-    when 'production'
-      apiUrl = 'https://api.sashimi.io'
-    when 'sandbox'
-      apiUrl = 'https://api.sandbox.sashimi.io'
-    when 'staging'
-      apiUrl = 'https://api.staging.sashimi.io'
-    when 'development'
-      apiUrl = 'http://localhost:5000/api'
   gutil.log 'scripts:', gutil.colors.magenta('Debug:'), gutil.colors.cyan(if debug then 'on' else 'off')
-  gutil.log 'scripts:', gutil.colors.magenta('API URL:'), gutil.colors.cyan(apiUrl)
   browserify
       entries    : './src/assets/scripts/app.coffee'
-      extensions : ['.cjsx', '.coffee', '.litcoffee']
+      extensions : ['.hamlc', '.coffee', '.litcoffee']
       debug      : debug
-    .transform reactify,
-      coffeeout: true
     .transform coffeeify
+    .transform hamlify
     .transform envify
-      apiUrl       : apiUrl
       lastModified : (new Date).toUTCString()
     .bundle()
     .on 'error', notify.onError (err) ->

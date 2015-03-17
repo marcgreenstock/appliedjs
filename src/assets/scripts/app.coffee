@@ -8,19 +8,13 @@ require 'bootstrap.modal'
 require './lib/backbone.ext'
 Backbone = require 'backbone'
 Backbone.$ = $
-# {account} = require './models/account'
-# {session} = require './models/session'
 MainView  = require './views/main_view'
-# Router    = require './config/router'
+Router    = require './config/router'
 
 new MainView
   el: 'body'
 
-# new Router new MainView
-#   el: 'body'
-#
-# session.fetch()
-# Backbone.history.start()
-#
-# window.session = session
-# window.account = account
+new Router new MainView
+  el: 'body'
+
+Backbone.history.start()
