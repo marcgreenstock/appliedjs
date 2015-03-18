@@ -133,7 +133,7 @@ gulp.task('scripts', function() {
     })
     .bundle()
     .pipe(source('app.js'))
-    .pipe(gulp.dest('./_build/assets');
+    .pipe(gulp.dest('./_build/assets'));
 });
             </code>
           </pre>
@@ -186,7 +186,7 @@ gulp.task('publish', ['styles', 'scripts'], function() {
     .pipe(publisher.publish(headers))
     .pipe(publisher.cache())
     .pipe(awspublish.reporter())
-    .pipe(cloudfront(aws))
+    .pipe(cloudfront(aws));
 });
             </code>
           </pre>
