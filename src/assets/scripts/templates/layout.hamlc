@@ -1,7 +1,7 @@
 %nav.navbar.navbar-default.navbar-fixed-top
   .container
     .navbar-header
-      %button.navbar-toggle.collapsed{type: 'button', data: {toggle: 'collapse'}}
+      %button.navbar-toggle.collapsed{type: 'button', data: {toggle: 'collapse', target: '#navbar_menu'}}
         %span.sr-only
           Toggle navigation
         %span.icon-bar
