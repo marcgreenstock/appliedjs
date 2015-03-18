@@ -47,7 +47,7 @@
 
         <section>
           <h2>Say hello to Gulp</h2>
-					<img src="lib/img/gulp.png" style="background: transparent; border: none; box-shadow: none;">
+          <img src="lib/img/gulp.png" style="background: transparent; border: none; box-shadow: none;">
         </section>
 
         <section>
@@ -82,27 +82,27 @@ gulp.task('styles', function() {
         </section>
 
         <section>
-					<h2>Building JavaScript</h2>
-					<img class="fragment" src="lib/img/browserify.png" style="background: transparent; border: none; box-shadow: none;">
-				</section>
+          <h2>Building JavaScript</h2>
+          <img class="fragment" src="lib/img/browserify.png" style="background: transparent; border: none; box-shadow: none;">
+        </section>
 
-				<section>
-					<h2>The tool belt</h2>
-        	<pre>
-          	<code>
+        <section>
+          <h2>The tool belt</h2>
+          <pre>
+            <code>
 var browserify = require('browserify');
 var reactify = require('coffee-reactify');
 var envify = require('envify/custom');
 var coffeeify = require('coffeeify');
 var source = require('vinyl-source-stream');
-						</code>
-					</pre>
-				</section>
+            </code>
+          </pre>
+        </section>
 
-				<section>
-					<h2>The gulp task</h2>
-					<pre>
-          	<code>
+        <section>
+          <h2>The gulp task</h2>
+          <pre>
+            <code>
 gulp.task('scripts', function() {
   var options = {
     entries: './src/assets/scripts/app.coffee',
@@ -126,11 +126,11 @@ gulp.task('scripts', function() {
           </pre>
         </section>
 
-				<section>
-					<h2>Publishing</h2>
-					<h5 class="fragment" style="text-transform: initial;">credentials.json</h5>
-					<pre class="fragment">
-						<code>
+        <section>
+          <h2>Publishing</h2>
+          <h5 class="fragment" style="text-transform: initial;">credentials.json</h5>
+          <pre class="fragment">
+            <code>
 {
   "production": {
     "aws": {
@@ -141,25 +141,25 @@ gulp.task('scripts', function() {
     }
   }
 }
-						</code>
-					</pre>
-				</section>
+            </code>
+          </pre>
+        </section>
 
-				<section>
-					<h2>The tool belt</h2>
-					<pre>
-						<code>
+        <section>
+          <h2>The tool belt</h2>
+          <pre>
+            <code>
 var revall = require('gulp-rev-all');
 var awspublish = require('gulp-awspublish');
 var cloudfront = require('gulp-cloudfront');
-						</code>
-					</pre>
-				</section>
+            </code>
+          </pre>
+        </section>
 
-				<section>
-					<h2>The gulp task</h2>
-					<pre>
-						<code>
+        <section>
+          <h2>The gulp task</h2>
+          <pre>
+            <code>
 gulp.task('publish', ['styles', 'scripts'], function() {
   var aws = require('./credentials').production.aws;
   var headers = {
@@ -175,59 +175,59 @@ gulp.task('publish', ['styles', 'scripts'], function() {
     .pipe(awspublish.reporter())
     .pipe(cloudfront(aws))
 });
-						</code>
-					</pre>
-				</section>
+            </code>
+          </pre>
+        </section>
 
-				<section>
-					<h2>What is a fingerprint?</h2>
-					<p class="fragment"><code>app.js</code></p>
-					<h5 class="fragment">becomes</h5>
-					<p class="fragment"><code>app.05b2a126.js</code></p>
-				</section>
+        <section>
+          <h2>What is a fingerprint?</h2>
+          <p class="fragment"><code>app.js</code></p>
+          <h5 class="fragment">becomes</h5>
+          <p class="fragment"><code>app.05b2a126.js</code></p>
+        </section>
 
-				<section>
-					<h2>Referencing fingerprints</h2>
-					<pre>
-						<code>
+        <section>
+          <h2>Referencing fingerprints</h2>
+          <pre>
+            <code>
 &lt;html&gt;
   &lt;head&gt;
     &lt;script src="/assets/app.js"&gt;&lt;script&gt;
     &lt;link rel="stylesheet" href="/assets/app.css"&gt;
   &lt;/head&gt;
 &lt;/html&gt;
-						</code>
-					</pre>
-				</section>
+            </code>
+          </pre>
+        </section>
 
-				<section>
-					<h2>Referencing fingerprints</h2>
-					<pre>
-						<code>
+        <section>
+          <h2>Referencing fingerprints</h2>
+          <pre>
+            <code>
 &lt;html&gt;
   &lt;head&gt;
     &lt;script src="/assets/app.05b2a126.js"&gt;&lt;script&gt;
     &lt;link rel="stylesheet" href="/assets/app.16f2b973.css"&gt;
   &lt;/head&gt;
 &lt;/html&gt;
-						</code>
-					</pre>
-				</section>
+            </code>
+          </pre>
+        </section>
 
-				<section>
-					<h2>Invalidating the cache</h2>
-					<h3 class="fragment">That's for suckers</h3>
-					<p class="fragment">gulp-cloudfront changes the root object instead.</p>
-				</section>
+        <section>
+          <h2>Invalidating the cache</h2>
+          <h3 class="fragment">That's for suckers</h3>
+          <p class="fragment">gulp-cloudfront changes the root object instead.</p>
+        </section>
 
-				<section>
-					<h2>Development</h2>
-				</section>
+        <section>
+          <h2>Development</h2>
+        </section>
 
-				<section>
-					<h2>Watching for changes</h2>
-					<pre>
-						<code>
+        <section>
+          <h2>Watching for changes</h2>
+          <pre>
+            <code>
 var watch = require('gulp-watch');
 
 gulp.task('watch', function(callback) {
@@ -239,14 +239,14 @@ gulp.task('watch', function(callback) {
   });
   callback();
 });
-						</code>
-					</pre>
-				</section>
+            </code>
+          </pre>
+        </section>
 
-				<section>
-					<h2>Local hosting</h2>
-					<pre>
-						<code>
+        <section>
+          <h2>Local hosting</h2>
+          <pre>
+            <code>
 var webserver = require('gulp-webserver');
 
 gulp.task('serve', function() {
@@ -256,36 +256,48 @@ gulp.task('serve', function() {
       open: false
     });
 });
-						</code>
-					</pre>
-				</section>
+            </code>
+          </pre>
+        </section>
 
-				<section>
-					<h1>Demo</h1>
+        <section>
+          <h2>What else can you do?</h2>
+          <p>
+            <span class="fragment">Sprites</span>
+            <span class="fragment">Compress Images</span>
+            <span class="fragment">Favicons</span>
+            <span class="fragment">Compile fonts</span>
+            <span class="fragment">Tests</span>
+            <span class="fragment">Linting</span>
+          </p>
+        </section>
+
+        <section>
+          <h1>Demo</h1>
           <a href="https://d4r6pkna9dlct.cloudfront.net" target="_blank">d4r6pkna9dlct.cloudfront.net</a>
           <img src="lib/img/qr.png">
-				</section>
+        </section>
 
-				<section>
-					<h1>Thank you</h1>
-					<h2>Questions?</h2>
-				</section>
+        <section>
+          <h1>Thank you</h1>
+          <h2>Questions?</h2>
+        </section>
 
-				<section>
-					<h2>Resources</h2>
+        <section>
+          <h2>Resources</h2>
           <p>github.com/marcgreenstock/appliedjs</p>
-					<ul>
-						<li>gulpjs.com</li>
-						<li>browserify.org</li>
-						<li>npmjs.com/package/gulp-less</li>
-						<li>npmjs.com/package/envify</li>
-						<li>npmjs.com/package/gulp-awspublish</li>
-						<li>npmjs.com/package/gulp-rev-all</li>
-						<li>npmjs.com/package/gulp-cloudfront</li>
-						<li>npmjs.com/package/gulp-webserver</li>
-						<li>npmjs.com/package/gulp-watch</li>
-					</ul>
-				</section>
+          <ul>
+            <li>gulpjs.com</li>
+            <li>browserify.org</li>
+            <li>npmjs.com/package/gulp-less</li>
+            <li>npmjs.com/package/envify</li>
+            <li>npmjs.com/package/gulp-awspublish</li>
+            <li>npmjs.com/package/gulp-rev-all</li>
+            <li>npmjs.com/package/gulp-cloudfront</li>
+            <li>npmjs.com/package/gulp-webserver</li>
+            <li>npmjs.com/package/gulp-watch</li>
+          </ul>
+        </section>
       </div>
 
     </div>
